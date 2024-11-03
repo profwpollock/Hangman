@@ -25,6 +25,7 @@ fn main() {
 fn err (msg: &str) {
     eprintln!("Usage: {}", PROGRAM_NAME.get().unwrap());
     eprintln!("{}", msg);
+    eprintln!("Program will now abort");
     std::process::exit(1);  // 0 = success, any other = failure
 }
 

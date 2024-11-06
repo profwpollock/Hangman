@@ -1,3 +1,6 @@
+#![deny(rustdoc::broken_intra_doc_links)]
+#![warn(missing_docs)]
+
 //! Play a game of hangman.  This version uses the console (TUI).
 //! 
 
@@ -17,14 +20,13 @@ fn main() {
     program_name = re.replace(&program_name, "$name").to_string();
     PROGRAM_NAME.get_or_init(|| program_name);
 
-    // Some scaffold code:
-    println!("The path to the assets directory is {}", get_assets_directory().display());
-    err("Program starts");
+    // scaffold code:
+    println!("Program runs!");
 }
 
 fn err (msg: &str) {
     eprintln!("Usage: {}", PROGRAM_NAME.get().unwrap());
-    eprintln!("{}", msg);
+    eprintln!("\n{}", msg);
     eprintln!("Program will now abort");
     std::process::exit(1);  // 0 = success, any other = failure
 }

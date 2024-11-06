@@ -1,3 +1,8 @@
+#![deny(rustdoc::broken_intra_doc_links)]
+#![warn(missing_docs)]
+
+//! The library code for the hangman game.
+
 use std::path::PathBuf;
 
 /// Program resources are in the crate_root/assets directory by default:

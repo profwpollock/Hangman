@@ -7,6 +7,7 @@ a letter.
 
 The word list was downloaded 2024-11-03 from
 [GitHub.com/Tom25/Hangman](https://github.com/Tom25/Hangman/blob/master/wordlist.txt)
+Note: had to remove the word "quit" from the list!
 
 The game also displays guessed letters.
 

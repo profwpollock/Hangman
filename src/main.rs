@@ -20,8 +20,14 @@ fn main() {
     program_name = re.replace(&program_name, "$name").to_string();
     PROGRAM_NAME.get_or_init(|| program_name);
 
-    // scaffold code:
-    println!("Program runs!");
+    println!("\nHANGMAN\n");
+    loop {
+        match play_game() {
+            Ok(_) => { continue; }
+            _ => { break; }
+        }
+    }
+    println!("Thanks for playing!");
 }
 
 fn err (msg: &str) {

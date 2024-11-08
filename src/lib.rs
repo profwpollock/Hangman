@@ -4,14 +4,15 @@
 //! # The library code for the hangman game
 
 use std::path::PathBuf;
-use std::io::{BufRead, BufReader};
+use std::io;
+use std::io::{BufRead, BufReader, Write};
 use std::fs::File;
 use rand::Rng;
 
 const NUMBER_OF_GUESSES: i32 = 7;
 const WORD_LIST_FILE: &str = "words.txt";
 
-/// Play one complete game of hangman.  Return Err if user quits:
+/// Play one complete game of hangman.  Return Err if user quits.
 pub fn play_game() -> Result<(), String> {
     let word: String = get_word();
     let word_len = word.len();
@@ -22,26 +23,41 @@ pub fn play_game() -> Result<(), String> {
 
     while num_guesses_left > 0 {
         ui(&letters_guessed, num_guesses_left, &previous_guesses);
-        let guess: String = get_guess();
-        println!("guess was \"{}\"", guess);  // scaffold
+        guess = get_guess();
         if guess.len() == 0 {
             continue;
-        } else if guess.len() > 1 {
+        }
+        guess = guess.to_lowercase();
+        if guess.len() > 1 {
             if guess == "quit".to_string() {
                 return Err("done".to_string());
             }
             // check for word match
+            if guess == word {
+                println!("Congratulations!  You won!!");
+                return Ok(());
+            }
         } else {  // guess was one letter
-            ; // check for letter in the word
-            // update letters_guessed, previous_guesses
+            // check for letter in the word:
+            if word.contains(&guess) {
+                // update letters_guessed
+                ; // TODO
+            } else {
+                // update previous_guesses list
+                previous_guesses.push_str(&guess);
+                let mut letters: Vec<char> = previous_guesses.chars().collect();
+                letters.sort_unstable();
+                previous_guesses = letters.into_iter().collect();            
+            }
 
         }
         num_guesses_left -= 1;
     }
+    println!("No guesses left!  (The word was \"{}\".)", word);
     Ok(())
 }
 
-/// Program resources are in the crate_root/assets directory by default:
+/// Program resources are in the crate_root/assets directory by default.
 pub fn get_assets_directory() -> PathBuf {
     let mut assets_dir =
         PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -49,8 +65,9 @@ pub fn get_assets_directory() -> PathBuf {
     assets_dir
 }
 
-/// Return a random word from a file of words, one per line:
+/// Return a random word from a file of words containing one word per line.
 fn get_word() -> String {
+    // locate and open the word list file:
     let mut path = get_assets_directory();
     path.push(WORD_LIST_FILE);
     let err_message =
@@ -58,7 +75,7 @@ fn get_word() -> String {
     let word_list = BufReader::new(File::open(path.as_path())
         .expect(err_message.as_str()));
 
-    // count words (lines) in file:
+    // count words (lines) in the file:
     let mut num_words = 0;
     for _ in word_list.lines() {
         num_words += 1;
@@ -73,13 +90,18 @@ fn get_word() -> String {
         .nth(num - 1)
         .unwrap().unwrap();
 
-    println!("Today's secret word is \"{}\".", word);
+    println!("----------\nToday's secret word is \"{}\".", word);  // scaffold
     word
 }
 
 /// Gets user input:
 fn get_guess() -> String {
-    "quit".to_string() // scaffold
+    let mut guess = String::new();
+    print!("\nWhat is your guess (type \"quit\" to quit)? ");
+    io::stdout().flush();
+    io::stdin().read_line(&mut guess);
+    guess = guess.trim().to_string();
+    guess
 }
 /// Display user interface: underscores for unguessed letters,
 /// number of guesses left, previous guesses, and a prompt:
@@ -89,5 +111,4 @@ fn ui (letters_guessed: &str, num_guesses_left: i32, previous_guesses: &str) {
     if previous_guesses.len() != 0 {
         print!("    Previous Guesses: {}", previous_guesses);
     }
-    print!("\nWhat is your guess (type \"quit\" to quit)? ");
 }

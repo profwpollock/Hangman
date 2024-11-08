@@ -11,7 +11,7 @@ use std::sync::OnceLock;
 
 static PROGRAM_NAME: OnceLock<String> = OnceLock::new();
 
-fn main() {
+pub fn main() {
     // Get the name of the program, er, programatically:
     let cmd_line: Vec<String> = env::args().collect();
     let mut program_name = cmd_line[0].clone();

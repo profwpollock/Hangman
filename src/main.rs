@@ -2,15 +2,13 @@
 #![warn(missing_docs)]
 
 //! Play a game of hangman.  This version uses the console (TUI).
-//! 
+//!
 
 use hangman::*;
-use std::env;
 use regex::Regex;
-use std::sync::OnceLock;
+use std::env;
 
-static PROGRAM_NAME: OnceLock<String> = OnceLock::new();
-
+/// Initialize everything, then repeatedly play a game until user quits.
 pub fn main() {
     // Get the name of the program, er, programatically:
     let cmd_line: Vec<String> = env::args().collect();
@@ -21,20 +19,8 @@ pub fn main() {
     PROGRAM_NAME.get_or_init(|| program_name);
 
     println!("\nHANGMAN\n");
-    loop {
-        match play_game() {
-            Ok(_) => { continue; }
-            _ => { break; }
-        }
-    }
+    while play_game().is_ok() {}
     println!("Thanks for playing!");
-}
-
-fn err (msg: &str) {
-    eprintln!("Usage: {}", PROGRAM_NAME.get().unwrap());
-    eprintln!("\n{}", msg);
-    eprintln!("Program will now abort");
-    std::process::exit(1);  // 0 = success, any other = failure
 }
 
 #[cfg(test)]

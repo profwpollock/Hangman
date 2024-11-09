@@ -3,23 +3,27 @@
 
 mod unit_tests {
     //! Unit tests for hangman.
+
     use crate::*;
+    use hangman::err;
 
     #[test]
     #[ignore = "dummy test"]
     fn dummy_test() {
-        assert_eq!(2+2, 4);
+        assert_eq!(2 + 2, 4);
     }
 
     #[test]
-    fn test_asset_path () {
-        println!("The path to the assets directory is {}",
-        get_assets_directory().display());
+    fn test_asset_path() {
+        println!(
+            "The path to the assets directory is {}",
+            get_assets_directory().display()
+        );
     }
 
     #[test]
     #[should_panic]
-    fn test_err () {
+    fn test_err() {
         err("this is a test of the err function");
     }
 }

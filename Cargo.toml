@@ -2,7 +2,13 @@
 name = "hangman"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+authors = ["Wayne Pollock <pollock@acm.org>"]
+publish = false
+description = "A simple text-mode Hangman game"
+readme = "readme.md"
 
 [dependencies]
 rand = "0.8.5"
 regex = "1.11.1"
+unicode-segmentation = "1.12.0"

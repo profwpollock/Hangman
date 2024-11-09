@@ -19,8 +19,10 @@ pub fn main() {
     PROGRAM_NAME.get_or_init(|| program_name);
 
     println!("\nHANGMAN\n");
-    while play_game().is_ok() {}
-    println!("Thanks for playing!");
+    while play_game().is_ok() {
+        println!("\nHere's another one:");
+    }
+    println!("\nThanks for playing!");
 }
 
 #[cfg(test)]

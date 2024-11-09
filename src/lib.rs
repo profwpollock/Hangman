@@ -10,7 +10,7 @@ use std::io::{BufRead, BufReader, Write};
 use std::path::PathBuf;
 use std::sync::OnceLock;
 
-/// The program's name (argv[0]), used in diagnostic output.
+/// The program's name (argv\[0\]), used in diagnostic output.
 pub static PROGRAM_NAME: OnceLock<String> = OnceLock::new();
 
 const NUMBER_OF_GUESSES: i32 = 7;
@@ -36,16 +36,30 @@ pub fn play_game() -> Result<(), String> {
             if guess == *"quit" {
                 return Err("done".to_string());
             }
-            // check for word match
             if guess == word {
-                println!("Congratulations!  You won!!");
+                println!("Congratulations, you guessed \"{word}\". You won!!");
                 return Ok(());
             }
         } else {
             // guess was one letter
             // check for letter in the word:
-            if word.contains(&guess) {
-                // update letters_guessed:
+            if previous_guesses.contains(guess.chars().next().unwrap()) {
+                println!("You already guessed \"{guess}!");
+                continue;
+            }
+            if word.contains(guess.chars().next().unwrap()) {
+                // Update letters_guessed:
+                for (pos, ch) in word.chars().enumerate() {
+                    if guess.starts_with(ch) {
+                        letters_guessed
+                            .replace_range(pos..=pos, guess.as_str());
+                    }
+                }
+                // check if all letters are now guessed:
+                if letters_guessed == word {
+                    println!("Congratulations!  You won!!");
+                    return Ok(());    
+                }
             } else {
                 // update previous_guesses list
                 previous_guesses.push_str(&guess);
@@ -121,21 +135,9 @@ fn ui(letters_guessed: &str, num_guesses_left: i32, previous_guesses: &str) {
             .join(" ")
     );
     println!("    Guesses left: {}", num_guesses_left);
-    if previous_guesses.is_empty() {
+    if ! previous_guesses.is_empty() {
         print!("    Previous Guesses: {}", previous_guesses);
     }
-}
-
-/// Replace the nth char in a String.
-/// String::replace_range works for simple Unicode, but is not safe for
-/// more general Unicode.  This is totally unnecessary for this program
-/// but I wanted to document the technique.
-pub fn replace_nth_char(source: &str, n: usize, newchar: char) -> String {
-    source
-        .chars()
-        .enumerate()
-        .map(|(i, ch)| if i == n { newchar } else { ch })
-        .collect()
 }
 
 /// Handle fatal errors.

@@ -14,11 +14,14 @@ use std::sync::OnceLock;
 pub static PROGRAM_NAME: OnceLock<String> = OnceLock::new();
 
 const NUMBER_OF_GUESSES: i32 = 7;
-const WORD_LIST_FILE: &str = "words.txt";
+
+/// The name of the sorted ASCII word list, one word per line.
+pub const WORD_LIST_FILE: &str = "words.txt";
 
 /// Play one complete game of hangman.  Return Err if user quits.
 pub fn play_game() -> Result<(), String> {
     let word: String = get_word();
+    // TODO: allow hyphenated words, display the dash
     let word_len = word.len();
     let mut letters_guessed: String = "_".repeat(word_len).to_string();
     let mut num_guesses_left = NUMBER_OF_GUESSES;
@@ -105,8 +108,6 @@ fn get_word() -> String {
     );
     let mut word_iter = word_list.lines();
     let word: String = word_iter.nth(num - 1).unwrap().unwrap();
-
-    println!("----------Today's secret word is \"{}\".", word); // scaffold
     word
 }
 

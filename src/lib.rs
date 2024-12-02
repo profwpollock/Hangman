@@ -23,13 +23,13 @@ pub fn play_game() -> Result<(), String> {
     let word: String = get_word();
     // TODO: allow hyphenated words, display the dash
     let word_len = word.len();
-    let mut letters_guessed: String = "_".repeat(word_len).to_string();
+    let mut correct_letters_guessed: String = "_".repeat(word_len).to_string();
     let mut num_guesses_left = NUMBER_OF_GUESSES;
     let mut previous_guesses = String::new();
     let mut guess: String;
 
     while num_guesses_left > 0 {
-        ui(&letters_guessed, num_guesses_left, &previous_guesses);
+        ui(&correct_letters_guessed, num_guesses_left, &previous_guesses);
         guess = get_guess();
         if guess.is_empty() {
             continue; // Ignore user just hitting Enter key
@@ -54,12 +54,12 @@ pub fn play_game() -> Result<(), String> {
                 // Update letters_guessed:
                 for (pos, ch) in word.chars().enumerate() {
                     if guess.starts_with(ch) {
-                        letters_guessed
+                        correct_letters_guessed
                             .replace_range(pos..=pos, guess.as_str());
                     }
                 }
                 // check if all letters are now guessed:
-                if letters_guessed == word {
+                if correct_letters_guessed == word {
                     println!("Congratulations!  You won!!");
                     return Ok(());    
                 }
